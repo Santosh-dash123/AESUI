@@ -1,0 +1,128 @@
+﻿@{
+    ViewBag.Title = "Exam";
+}
+
+<link href="~/css/style.css" type="text/css" rel="stylesheet" />
+
+<style>
+    .exam-details {
+        margin-top: 20px;
+    }
+
+    #exam_editor {
+        height: 100px; /* Adjust the height as needed */
+        width: 100%;
+    }
+
+        #exam_editor .ql-editor {
+            background-color: transparent !important;
+        }
+
+        #exam_editor:hover .ql-editor {
+            background-color: transparent !important;
+        }
+
+</style>
+
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card bg-light">
+                <div>
+                    <h4 class="mb-0">Exam Master</h4>
+                </div>
+                <div class="tabs">
+                    <ul class="nav nav-tabs" id="myTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1" data-toggle="tab" href="#content1" onclick="toggleTabs('content1')">ADD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab2" data-toggle="tab" href="#content2" onclick="toggleTabs('content2')">View</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" id="content1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form>
+                            <div class="row">
+                                <input type="hidden" name="examid" id="examid">
+                                <div class="form-group col-md-3">
+                                    <label>Exam Name</label>
+                                    <input type="text" id="exam_name" class="form-control" placeholder="Exam Name" tabindex="1">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Exam Duration</label>
+                                    <input id="exam_duration" class="form-control" placeholder="Duration" tabindex="2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Subject</label>
+                                    <input type="text" id="exam_subject" class="form-control" placeholder="Subject Name" tabindex="3">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>No Of Questions</label>
+                                    <input id="exam_no_of_questions" class="form-control" placeholder="no of questions" tabindex="4">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label>Pass Marks</label>
+                                    <input id="exam_pass_marks" class="form-control" placeholder="pass marks" tabindex="5">
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <label for="exam_Description">Exam Description</label>
+                                    <div id="exam_editor" tabindex="6">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 posit">
+                                    <button type="button" id="btn_submit" class="btn btn-primary" onclick="addExam(event)" tabindex="10">SUBMIT</button>
+                                    <button type="button" id="btn_cancel" class="btn btn-danger" onclick="clearExamData()" tabindex="11">CANCEL</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Content -->
+        <!-- Your "View" content -->
+        <div class="col-lg-12" id="content2" style="display: none;">
+            <!-- View Content -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped dataTable" id="tblViewArea" style="width:100%">
+                                <thead>
+                                    <tr class="headergrid">
+                                        <th style="text-align:center;">Sl No</th>
+                                        <th style="text-align:center;">Exam Name</th>
+                                        <th style="text-align:center;">Duration</th>
+                                        <th style="text-align:center;">Examsubject</th>
+                                        <th style="text-align:center;">NoOf Questions</th>
+                                        <th style="text-align:center;">Passmarks</th>
+                                        <th style="text-align:center;width:100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblsearch">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/comreq.js"></script>
+<script src="~/js/master/exam.js"></script>

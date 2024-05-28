@@ -1,0 +1,241 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- theme meta -->
+    <meta name="theme-name" content="focus" />
+    <title>Focus Admin: Creative Admin Dashboard</title>
+    <!-- ================= Favicon ================== -->
+    <!-- Standard -->
+    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+    <!-- Retina iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="144x144" href="#">
+    <!-- Retina iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="114x114" href="#">
+    <!-- Standard iPad Touch Icon-->
+    <link rel="apple-touch-icon" sizes="72x72" href="#">
+    <!-- Standard iPhone Touch Icon-->
+    <link rel="apple-touch-icon" sizes="57x57" href="#">
+    <!-- Styles -->
+    <link href="~/css/lib/calendar2/pignose.calendar.min.css" rel="stylesheet">
+    <link href="~/css/lib/chartist/chartist.min.css" rel="stylesheet">
+    <link href="~/css/lib/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/lib/themify-icons.css" rel="stylesheet">
+    <link href="~/css/lib/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/css/lib/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/css/lib/weather-icons.css" rel="stylesheet" />
+    <link href="~/css/lib/menubar/sidebar.css" rel="stylesheet">
+    <link href="~/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/lib/helper.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: #3498db; /* Set your desired background color */
+        }
+
+        .unix-login {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+    <script src="~/js/jquery-3.7.1.js"></script>
+    <script src="~/js/sweetalert2011.js"></script>
+</head>
+<body class="bg-primary">
+    <div>
+        <div class="unix-login">
+            <div class="container-fluid">
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <div class="login-content">
+
+                            <div class="login-form">
+                                <h4>Student Login</h4>
+                                <form id="loginForm">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="text" id="txt_PhoneNo" class="form-control" tabindex="1" placeholder="Phone Number" fdprocessedid="eytad9" name="phoneno" maxlength="10" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <div class="password-container">
+                                            <input type="password" class="form-control" id="txt_StdPwd" tabindex="2" placeholder="Password" fdprocessedid="4qxsn8" name="pwd" required>
+                                            <span class="toggle-password" onclick="togglePassword('txt_StdPwd', 'eye-icon-pwd')"><i class="fa fa-eye-slash" id="eye-icon-pwd" style="color:black;"></i></span>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-flat m-b-30 m-t-30" id="signInButton" fdprocessedid="wzkd5" onclick="Loginchk()">Sign in</button>
+
+                                    <div class="register-link m-t-15 text-center">
+                                        <p>2023 ©ABACUS SYSTEM & SOLUTION(P) LTD. -<a href="#"> Abacus.com</a></p>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script src="~/js/comreq.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.noConflict();
+            $('txt_PhoneNo').focus();
+        });
+        function togglePassword(inputId, eyeIconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(eyeIconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        }
+        function ValidateLogin() {
+
+            if ($('#txt_PhoneNo')) {
+
+                if ($('#txt_PhoneNo').val() === "") {
+                    $("#txt_PhoneNo").focus();
+                    ValidationCallForInfo('PhoneNo cannot be  blank!!');
+                    return false;
+                }
+                var regex = /^[0-9]+$/;
+                if (!regex.test($('#txt_PhoneNo').val())) {
+                    $('#txt_PhoneNo').focus();
+                    ValidationCallForInfo('PhoneNo cannot contain characters!!');
+                    return false;
+                }
+                if ($('#txt_PhoneNo').val().length > 10) {
+                    $('#txt_PhoneNo').focus();
+                    ValidationCallForInfo('PhoneNo cannot exceed 10 digit!!');
+                    return false;
+                }
+                if ($('#txt_PhoneNo').val().length < 10) {
+                    $('#txt_PhoneNo').focus();
+                    ValidationCallForInfo('PhoneNo cannot less than 10 digit!!');
+                    return false;
+                }
+            }
+            if (!$('#txt_StdPwd').val()) {
+                $('#txt_StdPwd').focus();
+                ValidationCallForInfo('Password cannot be  blank!!');
+                return false;
+            }
+            return true;
+        }
+
+
+        function Loginchk() {
+            debugger;
+            if (ValidateLogin() == true) {
+                var phoneno = $("#txt_PhoneNo").val();
+                var pwd = $("#txt_StdPwd").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/StudentLogin/Login',
+                    data: { stdmobno: phoneno, stdpwd: pwd },
+                    dataType: 'json', // Ensure that the dataType is set to 'json'
+                    success: function (data) {
+                        debugger;
+                        if (data.success) {
+                            // Redirect to dashboard if login is successful
+                            window.location.href = '/Master/DashBoard';
+                        } else {
+                            // Show error message using SweetAlert
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message,
+                                didOpen: () => {
+                                    setTimeout(() => {
+                                        const okButton = document.querySelector('.swal2-confirm');
+                                        if (okButton) {
+                                            okButton.focus();
+                                        }
+                                    }, 0);
+                                },
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+        }
+
+    </script>
+
+
+    <!-- jquery vendor -->
+    <script src="~/js/lib/jquery.min.js"></script>
+    <script src="~/js/lib/jquery.nanoscroller.min.js"></script>
+    <!-- nano scroller -->
+    <script src="~/js/lib/menubar/sidebar.js"></script>
+    @* @<script src="~/js/lib/preloader/pace.min.js"></script> *@
+    <!-- sidebar -->
+
+    <script src="~/js/lib/bootstrap.min.js"></script>
+    <script src="~/js/scripts.js"></script>
+    <!-- bootstrap -->
+
+    <script src="~/js/lib/calendar-2/moment.latest.min.js"></script>
+    <script src="~/js/lib/calendar-2/pignose.calendar.min.js"></script>
+    <script src="~/js/lib/calendar-2/pignose.init.js"></script>
+
+
+    <script src="~/js/lib/weather/jquery.simpleWeather.min.js"></script>
+    <script src="~/js/lib/weather/weather-init.js"></script>
+    <script src="~/js/lib/circle-progress/circle-progress.min.js"></script>
+    <script src="~/js/lib/circle-progress/circle-progress-init.js"></script>
+    <script src="~/js/lib/chartist/chartist.min.js"></script>
+    <script src="~/js/lib/sparklinechart/jquery.sparkline.min.js"></script>
+    <script src="~/js/lib/sparklinechart/sparkline.init.js"></script>
+    <script src="~/js/lib/owl-carousel/owl.carousel.min.js"></script>
+    <script src="~/js/lib/owl-carousel/owl.carousel-init.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "User";
+}
+
+<link href="~/css/style.css" type="text/css" rel="stylesheet" />
+<style>
+  
+    .password-container {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+
+    .toggle-confirmpassword {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+
+    }
+</style>
+
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card bg-light">
+                <div>
+                    <h4 class="mb-0">User Master</h4>
+                </div>
+                <div class="tabs">
+                    <ul class="nav nav-tabs" id="myTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1" data-toggle="tab" href="#content1" onclick="toggleTabs('content1')">ADD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab2" data-toggle="tab" href="#content2" onclick="toggleTabs('content2')">View</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-12" id="content1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form id="form_id">
+                            <div class="row">
+                                <input type="hidden" name="uid" id="uid">
+                                <div class="form-group col-md-3">
+                                    <label> User Name</label>
+                                    <input type="text" class="form-control" placeholder="User Name" id="txt_UserName" tabindex="1">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Phone No</label>
+                                    <input type="text" class="form-control" placeholder="Phone No" id="txt_PhoneNo" tabindex="2" maxlength="10" oninput="validateInput(this)">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" placeholder="Email" id="txt_UserEmail" tabindex="3">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label style="color:black; font-size:large"><b> Address </b></label>
+                                    <textarea class="form-control" rows="3" placeholder="Address" id="Details" tabindex="4"></textarea>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>Type</label>
+                                    <select class="form-control rounded" id="ddl_UserType" tabindex="5">
+                                        <option disabled selected>Select</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="Teacher">Teacher</option>
+                                        <option value="Student">Student</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                      <label>Password</label>
+                                      <div class="password-container">
+                                        <input type="password" class="form-control" id="txt_UserPwd" tabindex="6" placeholder="Password">
+                                        <span class="toggle-password" onclick="togglePassword('txt_UserPwd', 'eye-icon-pwd')"><i class="fa fa-eye-slash" id="eye-icon-pwd" style="color:black;"></i></span>
+                                      </div>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label>Confirm Password</label>
+                                    <div class="password-container">
+                                        <input type="password" class="form-control" id="txt_UserConfrpwd" tabindex="7" placeholder="Confrim Password">
+                                        <span class="toggle-confirmpassword" onclick="togglePassword('txt_UserConfrpwd', 'eye-icon-confpwd')"><i class="fa fa-eye-slash" id="eye-icon-confpwd" style="color:black;"></i></span>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 posit">
+                                    <button type="button" class="btn btn-primary" id="btn_submit" tabindex="8" onclick="AddUser()">SUBMIT</button>
+                                    <button type="button" class="btn btn-danger" id="btn_cancel" onclick="clearUserData()" tabindex="9">CLEAR</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your "View" content -->
+        <div class="col-lg-12" id="content2" style="display: none;">
+            <!-- View Content -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped dataTable" id="tblViewArea" style="width:100%">
+                                <thead>
+                                    <tr class="headergrid">
+                                        <th style="text-align:center;">SlNo</th>
+                                        <th style="text-align:center;">User Name</th>
+                                        <th style="text-align:center;">Phone no</th>
+                                        <th style="text-align:center;">Email</th>
+                                        <th style="text-align:center;">Address</th>
+                                        <th style="text-align:center;">Type</th>
+                                        <th style="text-align:center;">Password</th>
+                                        <th style="text-align:center;width:100px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblsearch">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="~/js/master/user.js"></script>
+<script src="~/js/comreq.js"></script>
+<script type="text/javascript">
+    function togglePassword(inputId, eyeIconId) {
+        const passwordInput = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(eyeIconId);
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        }
+    }
+</script>

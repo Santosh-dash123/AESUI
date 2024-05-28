@@ -1,0 +1,52 @@
+﻿.qus-cont {
+    margin-top: 20px;
+}
+/* Override Quill styles for transparency */
+#editor_question .ql-editor,
+#editor_option .ql-editor {
+    background-color: transparent !important;
+}
+
+/* Override Quill hover styles for transparency */
+#editor_question:hover .ql-editor,
+#editor_option:hover .ql-editor {
+    background-color: transparent !important;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.toggle-button {
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #ccc;
+    transition: background-color 0.3s ease-in-out;
+}
+
+    .toggle-button:before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: #fff;
+        transition: transform 0.3s ease-in-out;
+    }
+
+.toggle-active .toggle-button {
+    background-color: #4CAF50; /* Change to the color you prefer when active */
+}
+
+    .toggle-active .toggle-button:before {
+        transform: translateX(20px);
+    }
+
+.option-status-text {
+    margin-left: 10px; /* Adjust margin as needed */
+}

@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "QuestionOptions";
+}
+@{
+    ViewBag.Title = "Question";
+}
+
+<link href="~/css/style.css" type="text/css" rel="stylesheet" />
+<link href="~/css/select2.css" rel="stylesheet" />
+<link href="~/css/master/questionandoptions.css" rel="stylesheet" />
+
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card bg-light">
+                <div>
+                    <h4 class="mb-0">Question Master</h4>
+                </div>
+                <div class="tabs">
+                    <ul class="nav nav-tabs" id="myTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1" data-toggle="tab" href="#content1" onclick="toggleTabs('content1')">ADD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab2" data-toggle="tab" href="#content2" onclick="toggleTabs('content2')">View</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-12" id="content1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="basic-form">
+
+                        <form id="form_id">
+                            <div class="row pb-2">
+                                <div class="form-group col-md-3">
+                                    <label>Exam Name</label>
+                                    <select class="form-control  sel2" id="exam_name" tabindex="1">
+                                        <!--HERE DORPDOWNLIST OF DYNAMICALLY EXAM ARE BIND-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pb-5">
+                                <div class="form-group col-md-9">
+                                    <label for="Question Content">Question Content</label>
+                                    <div id="editor_question" tabindex="2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pb-2 mb-5">
+                                <div class="form-group col-md-9">
+                                    <label for="Option Content">Option Content</label>
+                                    <div id="editor_option" tabindex="3">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <!-- Add mt-3 class here -->
+                                <div class="col-md-12">
+                                    <!-- Full width column for button and table -->
+                                    <button type="button" onclick="addTable()" id="add_option" class="btn btn-primary" tabindex="4">Add</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Full width column for the table -->
+                                    <table class="table table-hover table-bordered datatable">
+                                        <thead style="display: none;">
+                                            <tr>
+                                                <th>OPTION</th>
+                                                <th>STATUS</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3 posit">
+                                    <button type="button" onclick="addQuestionAndOptions(event)" id="btn_submit" class="btn btn-primary" tabindex="5">SUBMIT</button>
+                                    <button type="button" class="btn btn-danger" id="btn_cancel" onclick="clearAllData()" tabindex="6">CANCEL</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Your "View" content -->
+        <div class="col-lg-12" id="content2" style="display: none;">
+            <!-- View Content -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped dataTable" id="tblViewArea" style="width:100%">
+                                <thead>
+                                    <tr class="headergrid">
+                                        <th style="text-align:center;">SlNo</th>
+                                        <th style="text-align:center;">Exam Name</th>
+                                        <th style="text-align:center;">Question</th>
+                                        <th style="text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblsearch">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/select2.js"></script>
+<script src="~/js/master/questionandoptions.js"></script>
+<script src="~/js/comreq.js"></script>

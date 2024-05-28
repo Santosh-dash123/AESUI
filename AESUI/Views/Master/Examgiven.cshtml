@@ -1,0 +1,293 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string studentid = HttpContextAccessor.HttpContext.Session.GetString("StudentId");
+}
+<div class="row" id="cardContainer"></div>
+
+<script src="~/js/comreq.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Call your API to get student info
+        var studentId = @studentid;
+        var apiUrl = "/StudentLogin/GetStudentExamDataByStudentid";
+
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            data: { stdid: studentId },
+            success: function (response) {
+                $('#cardContainer').empty(); // Clear previous cards
+                console.log(response);
+                // Loop through the received data and create Bootstrap cards
+                response.forEach(function (studentInfo) {
+                    debugger;
+                    // Convert exam date, start time, and end time to Date objects
+                    var examDate = new Date(studentInfo.examDate);
+                    var startTime = parseTimeString(studentInfo.fromtime);
+                    var timeComponents = studentInfo.fromtime.split(" ");
+
+                    // Extract hours and minutes
+                    var timeParts = timeComponents[0].split(":");
+
+                    // Concatenate seconds after minutes
+                    var startCheckingTime = timeParts[0] + ":" + timeParts[1] + ":00 " + timeComponents[1];
+
+                    var endTime = parseTimeString(studentInfo.totime);
+                    var attendStatus = "";
+
+                    // Get the current date
+                    var currentDate = new Date();
+                    var currentYear = currentDate.getFullYear();
+                    var currentMonth = currentDate.getMonth();
+                    var currentDay = currentDate.getDate();
+
+                    // Extract year, month, and day from the exam date
+                    var examYear = examDate.getFullYear();
+                    var examMonth = examDate.getMonth();
+                    var examDay = examDate.getDate();
+
+                    // Check if exam is expired
+                    if (studentInfo.attndStatus !== 'N') {
+                        debugger;
+                        attendStatus = "Attend";
+                    }
+                    else if (currentYear > examYear || (currentYear === examYear && currentMonth > examMonth) || (currentYear === examYear && currentMonth === examMonth && currentDay > examDay)) {
+                        debugger;
+                        attendStatus = "Exam Expired";
+                    }
+                    else if ((currentYear === examYear && currentMonth === examMonth && currentDay === examDay) && endTime.getTime() < currentDate.getTime()) {
+                        debugger;
+                        attendStatus = "Exam Expired";
+                    }
+                    else {
+                        debugger;
+                        attendStatus = "Not Attend";
+                    }
+                    console.log(attendStatus);
+                    // Construct the card HTML
+                    var cardHtml = '<div class="col-md-6">' +
+                        '<div class="card">' +
+                        '<div class="card-body">' +
+                        '<div class="row">' +
+                        '<div class="col-md-6">' +
+                        '<h5 class="card-title text-center" style="font-size:30px; text-shadow: 2px 2px 4px #665e5e;">' + studentInfo.examName + '</h5>' +
+                        '<p class="card-text mt-3">Subject: ' + studentInfo.examSubject + '</p>' +
+                        '<p class="card-text">Date: ' + formatteddate(studentInfo.examDate) + '</p>' +
+                        '</div>' +
+                        '<div class="col-md-6">' +
+                        '<p class="card-text">Duration: ' + studentInfo.examDuration + ' mins</p>' +
+                        '<p class="card-text">Start Time: ' + studentInfo.fromtime + '</p>' +
+                        '<p class="card-text">End Time: ' + studentInfo.totime + '</p>' +
+                        '<p class="card-text">No. of Questions: ' + studentInfo.tnoqans + '</p>' +
+                        '<p class="card-text">Status: ' + attendStatus + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="row">' +
+                        '<div class="col-md-12">' +
+                        '<a href="#" id=' + studentInfo.examId + ' class="btn btn-primary" style="width: 100%;">Attend Exam</a>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+
+                    $('#cardContainer').append(cardHtml); // Append the card to the container
+
+                    // Add click event listener to the "Attend Exam" button
+                    $('#' + studentInfo.examId).click(function () {
+                        if (attendStatus === "Exam Expired") {
+                            Swal.fire(
+                                {
+                                    icon: 'error',
+                                    title: 'Exam Error',
+                                    text: "Exam already expired you cannot attend now!",
+                                    didOpen: () => {
+                                        // Use a timeout to ensure the Swal modal is rendered before attempting to set focus
+                                        setTimeout(() => {
+                                            const okButton = document.querySelector('.swal2-confirm');
+                                            if (okButton) {
+                                                okButton.focus();
+                                            }
+                                        }, 0);
+                                    },
+                                }
+                            );
+                        }
+                        else if (attendStatus === "Attend") {
+                            Swal.fire(
+                                {
+                                    icon: 'info',
+                                    title: 'Exam Warning',
+                                    text: "You are already attend exam!",
+                                    didOpen: () => {
+                                        // Use a timeout to ensure the Swal modal is rendered before attempting to set focus
+                                        setTimeout(() => {
+                                            const okButton = document.querySelector('.swal2-confirm');
+                                            if (okButton) {
+                                                okButton.focus();
+                                            }
+                                        }, 0);
+                                    },
+                                }
+                            );
+                        }
+                        else {
+                            debugger;
+                            // Call function to handle exam alerts
+                            handleExamAlert(examDate, startTime,startCheckingTime, endTime);
+                        }
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+
+    function parseTimeString(timeString) {
+        var parts = timeString.split(':');
+        var hour = parseInt(parts[0]);
+        var minute = parseInt(parts[1]);
+
+        // Adjust hour for AM/PM
+        if (timeString.includes('PM') && hour !== 12) {
+            hour += 12;
+        } else if (timeString.includes('AM') && hour === 12) {
+            hour = 0;
+        }
+
+        // Create a new Date object with today's date and the parsed hour and minute
+        var currentDate = new Date();
+        return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), hour, minute);
+    }
+
+    // Function to handle logic and display alerts
+    function handleExamAlert(examDate, startTime,startCheckingTime, endTime) {
+        debugger;
+        // Initialize a Swal instance
+        var swalInstance = Swal.fire({
+            icon: 'info',
+            title: 'Exam Alert',
+            text: 'Loading...',
+            showConfirmButton: true, // Hide the "OK" button initially
+            allowOutsideClick: true // Prevent closing by clicking outside the Swal
+        });
+
+        // Function to update remaining time in Swal message
+        function updateRemainingTime() {
+            debugger;
+            // Get the current date
+            var currentDate = new Date();
+            var currentTime = currentDate.getTime();
+            // Get current time string
+            var currentCheckingTime = currentDate.toLocaleTimeString('en-US', { hour12: true });
+            // Extract year, month, and day from the exam date
+            var examDateTime = new Date(examDate);
+
+            // Get the current date
+            var currentYear = currentDate.getFullYear();
+            var currentMonth = currentDate.getMonth();
+            var currentDay = currentDate.getDate();
+
+            // Extract year, month, and day from the exam date
+            var examYear = examDateTime.getFullYear();
+            var examMonth = examDateTime.getMonth();
+            var examDay = examDateTime.getDate();
+
+            //Check if exam date and current date is same then apply condition
+            if (currentYear === examYear && currentMonth === examMonth && currentDay === examDay)
+            {
+                debugger;
+                var timeDiff;
+                if (currentCheckingTime === startCheckingTime) {
+                    debugger;
+                    // Redirect to another view page
+                    window.location.href = "/Master/ExamDescr";
+                    // Prevent going back to the previous page
+                    history.pushState(null, null, location.href);
+                    window.onpopstate = function () {
+                        history.go(1);
+                    };
+                    return; // Return to prevent further execution
+                }
+                else
+                {
+                    if (currentTime < startTime) {
+                        debugger;
+                        // Calculate remaining time until start time
+                        timeDiff = startTime - currentTime;
+                    }
+                    else
+                    {
+                        debugger;
+                        // Redirect to another view page
+                        window.location.href = "/Master/ExamDescr";
+                        // Prevent going back to the previous page
+                        history.pushState(null, null, location.href);
+                        window.onpopstate = function () {
+                            history.go(1);
+                        };
+                        return; // Return to prevent further execution
+                    }
+                    var remainingDays = 0;
+                    var remainingHours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                    var remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                    // Update Swal message with remaining time
+                    swalInstance.update({
+                        text: "Exam will be started at: " + remainingDays + " days, " + remainingHours + " hours, " + remainingMinutes + " minutes, " + remainingSeconds + " seconds."
+                    });
+                }
+            }
+            // Check if current date is less than to exam date
+            else
+            {
+                debugger;
+                var timeDiff;
+                if (currentTime < startTime) {
+                    debugger;
+                    // Calculate remaining time until start time
+                    timeDiff = startTime - currentTime;
+                }
+                else if (currentTime > startTime) {
+                    debugger;
+                    // Calculate remaining time until next day's start time
+                    var nextDayStartTime = new Date(examDate);
+                    nextDayStartTime.setDate(nextDayStartTime.getDate() + 1);
+                    nextDayStartTime.setHours(startTime.getHours(), startTime.getMinutes(), startTime.getSeconds(), startTime.getMilliseconds());
+                    timeDiff = nextDayStartTime - currentTime;
+                }
+                var timeDiff1 = Math.abs(currentDate.getTime() - examDateTime.getTime());
+                // Convert time difference to days
+                var remainingDays = Math.ceil(timeDiff1 / (1000 * 60 * 60 * 24));
+                var remainingHours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var remainingMinutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+                var remainingSeconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+                // Update Swal message with remaining time
+                swalInstance.update({
+                    text: "Exam will be started at: " + remainingDays + " days, " + remainingHours + " hours, " + remainingMinutes + " minutes, " + remainingSeconds + " seconds."
+                });
+            }
+        }
+        // Call the function initially to show the Swal message
+        updateRemainingTime();
+
+        // Update the remaining time every second using setInterval
+        var intervalId = setInterval(updateRemainingTime, 1000);
+    }
+
+    function formatteddate(date) {
+        var examDate = new Date(date);
+        var day = examDate.getDate();
+        var month = examDate.getMonth() + 1; // Month is zero-based, so we add 1
+        var year = examDate.getFullYear();
+
+        day = (day < 10 ? '0' : '') + day;
+        month = (month < 10 ? '0' : '') + month;
+        var formattedExamDate = day + '-' + month + '-' + year;
+        return formattedExamDate;
+    }
+</script>

@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "ExamSetup";
+}
+<link href="~/css/style.css" type="text/css" rel="stylesheet" />
+<link href="~/css/select2.css" rel="stylesheet" />
+<div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card bg-light">
+                <div>
+                    <h4 class="mb-0">Examsetup Master</h4>
+                </div>
+                <div class="tabs">
+                    <ul class="nav nav-tabs" id="myTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1" data-toggle="tab" href="#content1" onclick="toggleTabs('content1')">ADD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab2" data-toggle="tab" href="#content2" onclick="toggleTabs('content2')">View</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" id="content1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form id="form_id">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="exam_name">Exam Name</label>
+                                    <select class="form-control  sel2" id="exam_name" tabindex="1">
+                                        <!--HERE DORPDOWNLIST OF DYNAMICALLY EXAM ARE BIND-->
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="exam_subject">Exam Subject</label>
+                                    <input type="text" id="exam_subject" class="form-control" placeholder="Exam Subject" readonly >
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="exam_duration">Exam Duration</label>
+                                    <input type="text" id="exam_duration" class="form-control" placeholder="Exam Duration" readonly >
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="exam_no_of_questions">No Of Questions</label>
+                                    <input type="text" id="exam_no_of_questions" class="form-control" placeholder="No of questions" readonly >
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="exam_pass_marks">Pass Marks</label>
+                                    <input type="text" id="exam_pass_marks" class="form-control" placeholder="Pass marks" readonly >
+                                </div>
+
+
+                                <div class="form-group col-md-3">
+                                    <label for="exam_date">Exam Date</label>
+                                    <input type="text" id="exam_date" class="datepicker form-control" placeholder="Date time" tabindex="2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="from_time">From Time</label>
+                                    <input type="text" id="from_time" class="timepicker form-control" placeholder="From time" value="00:00" tabindex="3">
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="to_time">To Time</label>
+                                    <input type="text" id="to_time" class="timepicker form-control" placeholder="To time" value="00:00" tabindex="4">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="std_name">Student Name</label>
+                                    <div class="input-group">
+                                        <select class="form-control sel2" id="std_name" tabindex="5"></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label for="">&nbsp;</label>
+                                    <div class="input-group-append">
+                                        <input type="button" class="add btn btn-primary btn-block py-2" onclick="addTable()" id="add_student" value="ADD" tabindex="6" style="margin-bottom:-40px;margin-right:200px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- Half width column for the table -->
+                                    <table class="table table-hover table-bordered datatable">
+                                        <thead style="display:none;">
+                                            <tr>
+                                                <th>STUDENT NAME</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 posit">
+                            <button type="button" onclick="addExamWithStudents(event)" id="btn_submit" class="btn btn-primary" tabindex="7">SUBMIT</button>
+                            <button type="button" id="btn_cancel" onclick="ClearAllData()" class="btn btn-danger" tabindex="8">CANCEL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12" id="content2" style="display: none;">
+            <!-- View Content -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-title">
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered table-striped dataTable" id="tblViewArea" style="width:100%">
+                                <thead>
+                                    <tr class="headergrid">
+                                        <th style="text-align:center;">SlNo</th>
+                                        <th style="text-align:center;">Exam Name</th>
+                                        <th style="text-align:center;">Exam Date</th>
+                                        <th style="text-align:center;">From Time</th>
+                                        <th style="text-align:center;">To Time</th>
+                                        <th style="text-align:center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblsearch">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/comreq.js"></script>
+<script src="~/js/select2.js"></script>
+<script src="~/js/master/examsetup.js"></script>

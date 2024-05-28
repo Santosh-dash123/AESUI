@@ -1,0 +1,23 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string studentid = HttpContextAccessor.HttpContext.Session.GetString("StudentId");
+}
+<script src="~/js/comreq.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Call your API to get student info
+        var studentId = @studentid;
+        var apiUrl = "/StudentLogin/GetStudentExamDataByStudentid";
+        $.ajax({
+            url: apiUrl,
+            type: "GET",
+            data: { stdid: studentId },
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+</script>
